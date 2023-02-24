@@ -1,3 +1,7 @@
+globals:
+    timeout_std: 30.0
+    timeout_ext: 120.0
+
 devices:
   r1:
     address: 10.85.58.240

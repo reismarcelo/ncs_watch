@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-IMAGE="ncs_watch:latest"
+IMAGE="ncs-watch:latest"
 WORKDIR="ncs-watch-data"
 
 ENV_VARS=( \
-  "TRAWL_USER" \
-  "TRAWL_PASSWORD"
+  "NCS_WATCH_USER" \
+  "NCS_WATCH_PASSWORD"
 )
 
 ENV_PARAM=""

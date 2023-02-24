@@ -82,20 +82,27 @@ The apply option execute the instructions determined by the spec file:
 (venv) % ncs_watch apply   
 Device username: cisco
 Device password: 
-INFO: [r1] Starting session to 10.85.58.240
+INFO: [ncs-5501] Starting session to 9.3.251.52
 INFO: Connected (version 2.0, client Cisco-2.0)
 INFO: Authentication (password) successful!
-INFO: [r1] Sending 'show log'
-INFO: [r1] Pattern '%PKT_INFRA-LINK' did not match
-INFO: [r1] Closed session
-INFO: [r2] Starting session to 10.85.58.239
-INFO: Connected (version 2.0, client Cisco-2.0)
-INFO: Authentication (password) successful!
-INFO: [r2] Sending 'show log'
-INFO: [r2] Pattern '%PKT_INFRA-LINK' matched 317 times, first match: %PKT_INFRA-LINK
-INFO: [r2] Closed session
-WARNING: Pattern matches found in the output from r2
-INFO: Saved output from commands to 'output_20230213.txt'
+INFO: [ncs-5501] Slots: 1, Interfaces: 4
+INFO: [ncs-5501] Starting line-card section
+INFO: [ncs-5501][slot 0] Sending 'epm_show_ltrace -T 0x1 | grep dispatch_link_notify'
+INFO: [ncs-5501][slot 0] Sending 'ofa_show_ltrace | grep dispatch_link_notify | grep linkstatus'
+INFO: [ncs-5501] Finished line-card section
+INFO: [ncs-5501] Sending 'show controllers optics 0/0/1/0'
+INFO: [ncs-5501] Sending 'show controllers optics 0/0/1/1'
+INFO: [ncs-5501] Sending 'show controllers optics 0/0/1/2'
+INFO: [ncs-5501] Sending 'show controllers optics 0/0/1/3'
+INFO: [ncs-5501] Sending 'show interface HundredGigE0/0/1/0'
+INFO: [ncs-5501] Sending 'show interface HundredGigE0/0/1/1'
+INFO: [ncs-5501] Sending 'show interface HundredGigE0/0/1/2'
+<snip>
+INFO: [ncs-5508] Sending 'show controllers HundredGigE0/0/0/23 phy'
+INFO: [ncs-5508] Sending 'show controllers fia diagshell 0 "counter pbm=all" location 0/0/CPU0'
+INFO: [ncs-5508] Sending 'show controllers fia diagshell 0 "show counters full" location 0/0/CPU0'
+INFO: [ncs-5508] Closed session
+INFO: Saved output to 'periodic_20230223_231443.zip'
 ```
 
 The schema option generates a JSON schema describing all options available in the spec file:
@@ -110,12 +117,16 @@ The examples directory contain a sample ncs_watch_spec.yml file, with similar co
 
 ```yaml
 ---
+globals:
+    timeout_std: 30.0
+    timeout_ext: 120.0
+
 devices:
   r1:
     address: 10.85.58.240
   r2:
     address: 10.85.58.239
-...
+
 ```
 
 All commands in the 'commands' section are sent to each device listed in the 'devices' section. If a command contains 
@@ -124,7 +135,7 @@ the 'find' keyword, the provided regular expression is used to search the comman
 ## Container Build
 
 ```
-% docker build -t ncs_watch .                                                                            
+% docker build --no-cache -t ncs-watch .                                                                           
 [+] Building 33.1s (11/11) FINISHED                                                                                                                       
  => [internal] load build definition from Dockerfile                                                                                                 0.0s
  => => transferring dockerfile: 684B                                                                                                                 0.0s
@@ -139,10 +150,10 @@ the 'find' keyword, the provided regular expression is used to search the comman
 The ncs_watch-run.sh script can be used to run ncs_watch commands inside the container. Any option passed to ncs_watch-run.sh is 
 provided to the ncs_watch command line:
 ```
-% ./ncs_watch-run.sh --version
+% ./ncs_watch_run.sh --version
 ncs_watch Version 1.1
 
-% ./ncs_watch-run.sh apply  
+% ./ncs_watch_run.sh apply  
 Device password: 
 INFO: [r1] Starting session to 10.85.58.240
 INFO: Connected (version 2.0, client Cisco-2.0)
