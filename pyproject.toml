@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ncs_watch"
+description = "Capture CLI commands to monitor NCS-55xx devices"
+authors = [
+  { name = "Marcelo Reis", email = "mareis@cisco.com" },
+]
+license = "MIT"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Networking",
+    "Typing :: Typed",
+    "Development Status :: 4 - Beta"
+]
+keywords = ["cisco", "network", "cli"]
+requires-python = ">=3.8"
+dependencies = [
+    "netmiko",
+    "PyYAML",
+    "pydantic"
+]
+dynamic = ["version"]
+
+[project.scripts]
+ncs_watch = "ncs_watch.__main__:main"
+
+[tool.hatch.version]
+path = "src/ncs_watch/__version__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+]
