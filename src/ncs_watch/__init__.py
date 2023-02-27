@@ -21,7 +21,7 @@ logging_config:
   handlers:
     console:
       class: "logging.StreamHandler"
-      level: "INFO"
+      level: "DEBUG"
       formatter: "simple"
   root:
     handlers:
